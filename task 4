@@ -1,0 +1,27 @@
+# === Install PuLP (if needed) ===
+# !pip install pulp
+
+from pulp import LpMaximize, LpProblem, LpVariable, value
+
+# Step 1: Define the problem
+model = LpProblem("Maximize_Profit", LpMaximize)
+
+# Step 2: Define decision variables
+A = LpVariable("Product_A", lowBound=0, cat='Integer')
+B = LpVariable("Product_B", lowBound=0, cat='Integer')
+
+# Step 3: Define objective function
+model += 40 * A + 30 * B, "Total_Profit"
+
+# Step 4: Add constraints
+model += 2 * A + 1 * B <= 100, "Labor_Hours"
+model += 3 * A + 2 * B <= 120, "Raw_Materials"
+
+# Step 5: Solve the problem
+model.solve()
+
+# Step 6: Output the results
+print("Status:", model.status)
+print(f"Produce {A.varValue} units of Product A")
+print(f"Produce {B.varValue} units of Product B")
+print(f"Maximum Profit: ₹{value(model.objective)}")
